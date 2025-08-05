@@ -60,8 +60,8 @@ print('states_2: |00>, |+0>, |++>')
 # need to do kronecker product of all gates
 
 # %%
-states = [state_plus, state_0, state_1, state_T]
-def kr(states):
+states = [state_plus, state_0, state_1]
+def states_creator(states):
 
     if len(states) == 2:
 
@@ -82,9 +82,39 @@ def kr(states):
 
         return state_out
 
-state_out = kr(states)
+state_out = states_creator(states)
 print(state_out)
+# %%
+#combine the gates together:
 
+gates = [X, H, T]
+
+def gate_combiner(gates):
+    if len(gates) == 2:
+        gate_out_0 = np.kron(gates[0], gates[1])
+        return gate_out_0
+    
+    if len(gates) == 1:
+        return gates[0]
+    
+    elif len(gates) > 2:
+        gate_out = np.kron(gates[0], gates[1])  # X Y
+
+        for i in range(2, len(gates)):
+            gate_out = np.kron(gate_out, gates[i])
+
+        return gate_out
+    
+gate_out = gate_combiner(gates)
+print(gate_out)
+
+# %%
+solution = gate_out @ state_out
+
+print(solution)
+# %% 
+
+#%% 
 # %%
 
 bell_state = np.array([[1], [0], [0], [1]]) / np.sqrt(2)  # |00> + |11>
