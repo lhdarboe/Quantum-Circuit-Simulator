@@ -36,9 +36,12 @@ state_plus_0 = np.array([[1], [0], [1], [0]]) / np.sqrt(2)  # |+0>
 state_plus_plus = np.array([[1], [1], [1], [1]]) / 2# |++>
 
 states_2 = [state_00, state_plus_0, state_plus_plus]
+
+
 # %%
 def apply_gate(gate, state):
-    return np.dot(gate, state)
+    solution = gate @ state
+    return solution
 
 solution_X = [apply_gate(X, st) for st in states]
 solution_Y = [apply_gate(Y, st) for st in states]
@@ -51,4 +54,57 @@ solution_CZ = [apply_gate(CZ, st) for st in states_2]
 # %%
 print('states: |0>, |+>, |1>, |T>')
 print('states_2: |00>, |+0>, |++>')
+# %%
+
+# |psi_out > = U_n ... U_1 U_0 |psi_in>
+# need to do kronecker product of all gates
+
+# %%
+states = [state_plus, state_0, state_1, state_T]
+def kr(states):
+
+    if len(states) == 2:
+
+        state_out_0 = np.kron(states[0], states[1])
+        return state_out_0
+    
+    if len(states) == 1:
+
+        return states[0]
+    
+    elif len(states) > 2:
+
+        state_out = np.kron(states[0], states[1])  # |+> |0>
+
+        for i in range(2, len(states)):
+
+            state_out = np.kron(state_out, states[i])
+
+        return state_out
+
+state_out = kr(states)
+print(state_out)
+
+# %%
+
+bell_state = np.array([[1], [0], [0], [1]]) / np.sqrt(2)  # |00> + |11>
+
+a,b = 1/np.sqrt(2), 1/np.sqrt(2)
+
+psi = a*state_0 + b*state_1
+
+# create the state |psi> |0>
+
+psi_1 = np.kron(psi, bell_state)  
+print(psi_1)
+
+# apply CNOT_12 to psi_1
+
+psi_2 
+
+
+
+
+
+
 # %%
