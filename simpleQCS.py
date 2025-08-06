@@ -172,5 +172,8 @@ def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
 psi_in = Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
 # %%
 gate_combiner([CNOT, I])
+# %%
+
+
 print('hej')
 # %%
