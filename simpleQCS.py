@@ -166,7 +166,7 @@ b = 1/np.sqrt(2)
 
 psi_c = a * state_0 + b * state_1  # |+>
 
-phi_A, phi_B =  state_0, state_0 
+phi_A, phi_B =  state_0, state_1 
 
 flip_gate = np.array([[0, 1], [1, 0]])
 
@@ -190,12 +190,25 @@ def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
 # %%
 
 Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
+
 # %%
 
-state_0 = np.array([[1], [0]])
+class QuantumApplication:
+    def __init__(self, gate, state):
+        self.gate = gate
+        self.state = state
 
-outcome, probs = probability_measurement(state_0)
-print("Outcome:", outcome)   # Should always be 0
-print("Probs:", probs)   
+    def apply(self):
+        answer = self.gate @ self.state
+        return answer
+    
+    def __str__(self):
+        return f"Applying gate \n {self.gate} \n to state \n {self.state} \n gives the state \n {self.apply()}"
+# %%
+
+print(QuantumApplication(X, state_0))
+# %%
+
+class QuantumCircuit:
 
 # %%
