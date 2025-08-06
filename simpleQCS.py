@@ -180,14 +180,11 @@ def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
 
     #probability = probability_measurement(psi_2)
     
-    return print('input state: ', psi_in), print('output after first action: ', psi_1), print('output after second action: ', psi_2), print('probability measurement: ', probability)
+    return print('input state: ', psi_in), print('output after first action: ', psi_1), print('output after second action: ', psi_2)
 
 # %%
 
-psi_in = Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
-# %%
-gate_combiner([CNOT, I])
-# %%
+Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
 # %%
 
 state_0 = np.array([[1], [0]])
