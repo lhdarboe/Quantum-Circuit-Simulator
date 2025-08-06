@@ -134,8 +134,19 @@ psi_1 = np.kron(psi, bell_state)
 print(psi_1)
 
 # apply CNOT_12 to psi_1
+
+
 # %%
 def probability_measurement(state):
+
+    state = state.flatten()
+    probabilities = np.abs(state) ** 2
+
+    probabilities = probabilities / np.sum(probabilities)
+
+    rng = np.random.default_rng()
+    outcome = rng.choice(len(probabilities), p=probabilities)
+
     
     rng = np.random.default_rng()
     probability = rng.choice(state, size = 2)
@@ -143,6 +154,11 @@ def probability_measurement(state):
     return probability
 
 probability_measurement(state_0)
+
+# %%
+
+probability_measurement(state_00)
+
 # %%
 
 psi_c, phi_A, phi_B = state_1, state_0, state_1 
@@ -157,13 +173,12 @@ def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
     gates = [H, I, CNOT]
 
     first_action = gate_combiner([CNOT, I])
-
     second_action = gate_combiner([H, I, I])
     
     psi_1 = first_action @ psi_in 
     psi_2 = second_action @ psi_1
 
-    probability = probability_measurement(psi_2)
+    #probability = probability_measurement(psi_2)
     
     return print('input state: ', psi_in), print('output after first action: ', psi_1), print('output after second action: ', psi_2), print('probability measurement: ', probability)
 
@@ -173,7 +188,12 @@ psi_in = Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
 # %%
 gate_combiner([CNOT, I])
 # %%
+# %%
 
+state_0 = np.array([[1], [0]])
 
-print('hej')
+outcome, probs = probability_measurement(state_0)
+print("Outcome:", outcome)   # Should always be 0
+print("Probs:", probs)   
+
 # %%
