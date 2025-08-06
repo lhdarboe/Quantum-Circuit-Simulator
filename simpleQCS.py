@@ -161,7 +161,12 @@ probability_measurement(state_00)
 
 # %%
 
-psi_c, phi_A, phi_B = state_1, state_0, state_1 
+a = 1/np.sqrt(2)
+b = 1/np.sqrt(2)
+
+psi_c = a * state_0 + b * state_1  # |+>
+
+phi_A, phi_B =  state_0, state_0 
 
 flip_gate = np.array([[0, 1], [1, 0]])
 
