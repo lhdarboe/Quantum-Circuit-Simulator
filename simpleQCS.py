@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from IPython.display import display, Latex
+# repr latex
 #%%
 
 ## try out X,Y,Z,H and T gates applied onto |0> |+> |T> states
@@ -168,6 +170,9 @@ psi_c = a * state_0 + b * state_1  # |+>
 
 phi_A, phi_B =  state_0, state_1 
 
+states_combined = [psi_c, phi_A, phi_B]
+gates_combined = [CNOT, H, I]
+
 flip_gate = np.array([[0, 1], [1, 0]])
 
 def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
@@ -193,22 +198,217 @@ Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
 
 # %%
 
-class QuantumApplication:
+class QuantumCircuit:
     def __init__(self, gate, state):
         self.gate = gate
         self.state = state
 
-    def apply(self):
-        answer = self.gate @ self.state
-        return answer
+    def Quantum_Teleportation_Circuit(self):
+        gate = self.gate
+        state = self.state
+        psi_in = states_creator(state)
+
+        first_action = gate_combiner([gate[0], gate[2]])
+        second_action = gate_combiner([gate[1], gate[2], gate[2]])
+        
+        psi_1 = first_action @ psi_in 
+        psi_2 = second_action @ psi_1
+
+        return psi_2
     
     def __str__(self):
-        return f"Applying gate \n {self.gate} \n to state \n {self.state} \n gives the state \n {self.apply()}"
+        return f"Applying gate \n {self.gate} \n to state \n {self.state} \n gives the state \n {self.Quantum_Teleportation_Circuit()}"
 # %%
 
-print(QuantumApplication(X, state_0))
+print(QuantumCircuit(gate=[CNOT, H, I], state=[psi_c, phi_A, phi_B]))
+
+# %%
+secondaction = gate_combiner([H, I, I])
+psi_in = states_creator([psi_c, phi_A, phi_B])
+firstaction = gate_combiner([CNOT, I])
+psi_1 = firstaction @ psi_in
+psi_2 = secondaction @ psi_1
+
+print(psi_2)
 # %%
 
-class QuantumCircuit:
+class bit8:
+    @staticmethod
+    def state_000():
+        return np.array([1, 0, 0, 0, 0, 0, 0, 0])  
+    @staticmethod
+    def state_111():
+        return np.array([0, 0, 0, 0, 0, 0, 0, 1])
+    @staticmethod
+    def state_010():
+        return np.array([0, 1, 0, 0, 0, 0, 0, 0])
+    @staticmethod
+    def state_101():
+        return np.array([0, 0, 0, 1, 0, 0, 0, 0])
+    @staticmethod
+    def state_110():
+        return np.array([0, 0, 0, 0, 1, 0, 0, 0])
+    @staticmethod
+    def state_011():
+        return np.array([0, 0, 0, 0, 0, 1, 0, 0])
+    @staticmethod
+    def state_100():
+        return np.array([0, 0, 0, 0, 0, 0, 1, 0])     
+    @staticmethod
+    def state_001():
+        return np.array([0, 0, 1, 0, 0, 0, 0, 0])  
+
+bit8.state_0001()
+
+# %%
+
+final_state = QuantumCircuit(gate=[CNOT, H, I], state=[psi_c, phi_A, phi_B])
+final_state2 = final_state.Quantum_Teleportation_Circuit()
+flatten_final_state = final_state2.flatten()
+probability = np.abs(flatten_final_state) ** 2
+print("Final state probabilities:", probability)
+print(bit8.state_001())
+
+# calculating |<psi|psi_final>|^2
+
+class probability_calculator:
+    def __init__(self, initial_state, final_state):
+        self.initial_state = initial_state
+        self.final_state = final_state
+
+    def calculate_probability(self):
+        inner_product = np.vdot(self.initial_state, self.final_state)
+        probability = np.abs(inner_product) ** 2
+        return probability
+    
+    def __str__(self):
+        return f"Probability of measuring the final state from the initial state: {self.calculate_probability()}"
+
+
+prob_010 = probability_calculator(bit8.state_010(),probability)
+prob_100 = probability_calculator(bit8.state_100(),probability)
+prob_001 = probability_calculator(bit8.state_001(),probability)
+prob_111 = probability_calculator(bit8.state_111(),probability)
+prob_000 = probability_calculator(bit8.state_000(),probability)
+prob_011 = probability_calculator(bit8.state_011(),probability)
+prob_101 = probability_calculator(bit8.state_101(),probability)
+prob_110 = probability_calculator(bit8.state_110(),probability)
+"""
+list_of_probabilities = [
+    prob_000, prob_001, prob_010, prob_011,
+    prob_100, prob_101, prob_110, prob_111
+]
+
+sum_probabilities = np.sum(list_of_probabilities)
+"""
+print(probability_calculator(bit8.state_010(),probability))
+# %%
+print(list_of_probabilities)
+
+# %%
+probability_calculator(bit8.state_010(),probability)
+# %%
+
+final_state = QuantumCircuit(gate=[CNOT, H, I], state=[psi_c, phi_A, phi_B])
+final_state2 = final_state.Quantum_Teleportation_Circuit()
+flatten_final_state = final_state2.flatten()
+probability = np.abs(flatten_final_state) #** 2
+print("Final state probabilities:", probability)
+print(bit8.state_001())
+
+# calculating |<psi|psi_final>|^2
+
+class probability_calculator:
+    def __init__(self, initial_state, final_state):
+        self.initial_state = initial_state
+        self.final_state = final_state
+
+    def calculate_probability(self):
+        inner_product = np.vdot(self.initial_state, self.final_state)
+        probability = np.abs(inner_product) ** 2
+        return probability
+    
+    #def __str__(self):
+    #    return f"Probability of measuring the final state from the initial state: {self.calculate_probability()}"
+    
+    def __float__(self):
+        return self.calculate_probability()
+
+prob_010 = float(probability_calculator(bit8.state_010(),probability))
+prob_100 = float(probability_calculator(bit8.state_100(),probability))
+prob_001 = float(probability_calculator(bit8.state_001(),probability))
+prob_111 = float(probability_calculator(bit8.state_111(),probability))
+prob_000 = float(probability_calculator(bit8.state_000(),probability))
+prob_011 = float(probability_calculator(bit8.state_011(),probability))
+prob_101 = float(probability_calculator(bit8.state_101(),probability))
+prob_110 = float(probability_calculator(bit8.state_110(),probability))
+
+list_of_probabilities = [
+    prob_000, prob_001, prob_010, prob_011,
+    prob_100, prob_101, prob_110, prob_111
+]
+
+sum_probabilities = np.sum(list_of_probabilities)
+
+print(probability_calculator(bit8.state_010(),probability))
+# %%
+probability_calculator(bit8.state_010(),probability)
+# %%
+print(list_of_probabilities)
+np.sum(list_of_probabilities)
+
+# %%
+
+#____________________________________________________________________________________
+# CHAT CODE 
+#____________________________________________________________________________________
+
+# Displaying quantum states in LaTeX format
+
+from IPython.display import display, Latex
+
+# Suppose you want to show the state |00>
+display(Latex(r"$|00\rangle$"))
+
+# Or a more general state with coefficients, e.g.:
+alpha = 0.707
+beta = 0.707
+display(Latex(rf"$\psi = {alpha:.2f}|00\rangle + {beta:.2f}|11\rangle$"))
+
+def display_state(bitstring):
+    display(Latex(rf"$|{bitstring}\rangle$"))
+
+# Example usage:
+
+display_state("01")
+
+display(Latex(r"$\frac{1}{\sqrt{2}} |0\rangle + \frac{1}{\sqrt{2}} |1\rangle$"))
+
+from IPython.display import display, Latex
+
+class QuantumStateDisplay:
+    def __init__(self, coefficients, basis_states):
+        """
+        coefficients: list of strings (LaTeX strings or numbers as strings)
+        basis_states: list of basis state strings, e.g. ["0", "1"]
+        """
+        self.coefficients = coefficients
+        self.basis_states = basis_states
+    
+    def __str__(self):
+        terms = []
+        for coef, state in zip(self.coefficients, self.basis_states):
+            terms.append(f"{coef} |{state}\\rangle")
+        return " + ".join(terms)
+    
+    def show(self):
+        latex_str = "$" + str(self) + "$"
+        display(Latex(latex_str))
+qs = QuantumStateDisplay(
+    coefficients=[r"\frac{1}{\sqrt{2}}", r"\frac{1}{\sqrt{2}}"],
+    basis_states=["0", "1"]
+)
+qs.show()
+
 
 # %%
