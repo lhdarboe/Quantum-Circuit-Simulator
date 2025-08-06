@@ -11,6 +11,7 @@ Y = np.array([[0, -1j], [1j, 0]])
 Z = np.array([[1, 0], [0, -1]])
 H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
 T = np.array([[1, 0], [0, np.exp(1j *np.pi / 4)]])
+I = np.array([[1, 0], [0, 1]])
 
 state_0 = np.array([[1], [0]])  # |0>
 state_1 = np.array([[0], [1]])  # |1>
@@ -25,6 +26,7 @@ CNOT = np.array([[1, 0, 0, 0],
                  [0, 1, 0, 0],
                  [0, 0, 0, 1],
                  [0, 0, 1, 0]])
+
 
 CZ = np.array([[1, 0, 0, 0],
                [0, 1, 0, 0],    
@@ -107,7 +109,10 @@ def gate_combiner(gates):
     
 gate_out = gate_combiner(gates)
 print(gate_out)
+#%% Measurement 
 
+def measure(state):
+    rng = np.random.default_rng()
 # %%
 solution = gate_out @ state_out
 
@@ -129,12 +134,42 @@ psi_1 = np.kron(psi, bell_state)
 print(psi_1)
 
 # apply CNOT_12 to psi_1
+# %%
+def probability_measurement(state):
+    
+    rng = np.random.default_rng()
+    probability = rng.choice(state, size = 2)
 
-psi_2 
+    return probability
 
+probability_measurement(state_0)
+# %%
 
+psi_c, phi_A, phi_B = state_1, state_0, state_1 
 
+flip_gate = np.array([[0, 1], [1, 0]])
 
+def Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I):
 
+    states = [psi_c, phi_A, phi_B]
+    psi_in = states_creator(states)
 
+    gates = [H, I, CNOT]
+
+    first_action = gate_combiner([CNOT, I])
+
+    second_action = gate_combiner([H, I, I])
+    
+    psi_1 = first_action @ psi_in 
+    psi_2 = second_action @ psi_1
+
+    probability = probability_measurement(psi_2)
+    
+    return print('input state: ', psi_in), print('output after first action: ', psi_1), print('output after second action: ', psi_2), print('probability measurement: ', probability)
+
+# %%
+
+psi_in = Quantum_Teleportation_Circuit(psi_c, phi_A, phi_B, CNOT, H, I)
+# %%
+gate_combiner([CNOT, I])
 # %%
